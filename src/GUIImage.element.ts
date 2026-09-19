@@ -17,6 +17,24 @@ export interface GUIImageElement {
   sliceTop?: number;
   sliceBottom?: number;
   sliceRight?: number;
+  // Transform
+  scaleX?: number;
+  scaleY?: number;
+  transformCenterX?: number;
+  transformCenterY?: number;
+  rotation?: number;
+  // Appearance
+  alpha?: number;
+  color?: string;
+  shadowBlur?: number;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
+  shadowColor?: string;
+  // Behavior
+  isEnabled?: boolean;
+  isHitTestVisible?: boolean;
+
+  clipContent?: number;
 }
 
 export class GUIImageElement extends GUIElement {
@@ -65,11 +83,30 @@ export class GUIImageElement extends GUIElement {
       "sliceLeft",
       "sliceRight",
       "sliceTop",
+      // Transform
+      "scaleX",
+      "scaleY",
+      "transformCenterX",
+      "transformCenterY",
+      "rotation",
+      // Appearance
+      "alpha",
+      "color",
+      "shadowBlur",
+      "shadowOffsetX",
+      "shadowOffsetY",
+      "shadowColor",
+      // Behavior
+      "isEnabled",
+      "isHitTestVisible",
+      "zIndex",
+      "clipContent",
     ];
   }
 
   attributeChangedCallback(name: string, oldValue: any, newValue: any) {
     switch (name) {
+      // Layout
       case "width":
         this.image.width = newValue;
         break;
@@ -94,6 +131,14 @@ export class GUIImageElement extends GUIElement {
       case "paddingRight":
         this.image.paddingRight = newValue;
         break;
+      case "horizontalAlignment":
+        this.image.horizontalAlignment = parseInt(newValue, 10);
+        break;
+      case "verticalAlignment":
+        this.image.verticalAlignment = parseInt(newValue, 10);
+        break;
+
+      // Image-specific
       case "source":
         this.image.source = newValue;
         break;
@@ -126,17 +171,8 @@ export class GUIImageElement extends GUIElement {
         break;
       case "domImage":
         this.image.domImage = document.querySelector(
-          newValue
+          newValue,
         ) as HTMLImageElement;
-        break;
-      case "sliceLeft":
-        this.image.sliceLeft = parseInt(newValue, 10);
-        break;
-      case "sliceTop":
-        this.image.sliceTop = parseInt(newValue, 10);
-        break;
-      case "sliceBottom":
-        this.image.sliceBottom = parseInt(newValue, 10);
         break;
       case "sliceLeft":
         this.image.sliceLeft = parseInt(newValue, 10);
@@ -147,11 +183,56 @@ export class GUIImageElement extends GUIElement {
       case "sliceTop":
         this.image.sliceTop = parseInt(newValue, 10);
         break;
-      case "horizontalAlignment":
-        this.image.horizontalAlignment = parseInt(newValue, 10);
+      case "sliceBottom":
+        this.image.sliceBottom = parseInt(newValue, 10);
         break;
-      case "verticalAlignment":
-        this.image.verticalAlignment = parseInt(newValue, 10);
+      // Transform
+      case "scaleX":
+        this.image.scaleX = parseFloat(newValue);
+        break;
+      case "scaleY":
+        this.image.scaleY = parseFloat(newValue);
+        break;
+      case "transformCenterX":
+        this.image.transformCenterX = parseFloat(newValue);
+        break;
+      case "transformCenterY":
+        this.image.transformCenterY = parseFloat(newValue);
+        break;
+      case "rotation":
+        this.image.rotation = parseFloat(newValue);
+        break;
+      // Appearance
+      case "alpha":
+        this.image.alpha = parseFloat(newValue);
+        break;
+      case "color":
+        this.image.color = newValue;
+        break;
+      case "shadowBlur":
+        this.image.shadowBlur = parseFloat(newValue);
+        break;
+      case "shadowOffsetX":
+        this.image.shadowOffsetX = parseFloat(newValue);
+        break;
+      case "shadowOffsetY":
+        this.image.shadowOffsetY = parseFloat(newValue);
+        break;
+      case "shadowColor":
+        this.image.shadowColor = newValue;
+        break;
+      // Behavior
+      case "isEnabled":
+        this.image.isEnabled = newValue !== "false";
+        break;
+      case "isHitTestVisible":
+        this.image.isHitTestVisible = newValue !== "false";
+        break;
+      case "zIndex":
+        this.image.zIndex = parseInt(newValue, 10);
+        break;
+      case "clipContent":
+        this.image.clipContent = Boolean(parseInt(newValue));
         break;
     }
   }
@@ -159,13 +240,22 @@ export class GUIImageElement extends GUIElement {
   private styleChanged(property: string | symbol, value: any) {
     switch (property) {
       case "display":
-        this.image.isVisible = value == "none" ? false : true;
+        this.image.isVisible = value !== "none";
         break;
       case "visibility":
-        this.image.isVisible = value == "hidden" ? false : true;
+        this.image.isVisible = value !== "hidden";
         break;
       case "left":
         this.image.left = value;
+        break;
+      case "top":
+        this.image.top = value;
+        break;
+      case "width":
+        this.image.width = value;
+        break;
+      case "height":
+        this.image.height = value;
         break;
       case "paddingTop":
         this.image.paddingTop = value;
@@ -179,23 +269,18 @@ export class GUIImageElement extends GUIElement {
       case "paddingRight":
         this.image.paddingRight = value;
         break;
-      case "top":
-        this.image.top = value;
-        break;
-      case "width":
-        this.image.width = value;
-        break;
-      case "height":
-        this.image.height = value;
-        break;
       case "color":
         this.image.color = value;
         break;
       case "opacity":
         this.image.alpha = parseFloat(this.style.opacity);
         break;
+      case "clipContent":
+        this.image.clipContent = Boolean(parseInt(value));
+        break;
     }
   }
+
   onMounted: (elm: GUIImageElement) => void;
 
   connectedCallback() {
@@ -219,7 +304,6 @@ export class GUIImageElement extends GUIElement {
   processChildren() {}
 
   getControl(): Control {
-    this.image
     return this.image;
   }
 }

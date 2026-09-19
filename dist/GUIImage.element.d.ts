@@ -16,6 +16,20 @@ export interface GUIImageElement {
     sliceTop?: number;
     sliceBottom?: number;
     sliceRight?: number;
+    scaleX?: number;
+    scaleY?: number;
+    transformCenterX?: number;
+    transformCenterY?: number;
+    rotation?: number;
+    alpha?: number;
+    color?: string;
+    shadowBlur?: number;
+    shadowOffsetX?: number;
+    shadowOffsetY?: number;
+    shadowColor?: string;
+    isEnabled?: boolean;
+    isHitTestVisible?: boolean;
+    clipContent?: number;
 }
 export declare class GUIImageElement extends GUIElement {
     image: Image;
